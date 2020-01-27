@@ -15,6 +15,7 @@ jobs:
           name: "Build"
           command: |
             echo "Hello Worlds"
+            exit 1
   
   
 workflows:
