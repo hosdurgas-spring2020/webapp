@@ -5,12 +5,13 @@ jobs:
       - image: circleci/node:latest
     steps:
       - checkout
-      - run: 
+      - run: echo "Hello World"
   build:
     docker:
       - image: circleci/node:latest
-    steps:d
+    steps:
       - checkout
+
       - run:
           name: Update npm
           command: 'sudo npm install -g npm@latest'
@@ -41,6 +42,7 @@ jobs:
         # - store_artifacts:
         #     path: coverage
         #     prefix: coverage
+
             
   
   
