@@ -6,9 +6,22 @@ jobs:
     steps:
       - checkout
       - run: echo "Hello World"
+  build:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run: 
+          name: "Build"
+          command: |
+            echo "Hello Worlds"
+  
   
 workflows:
   version: 2
   pr_check_workflow:
     jobs:
       - pr_check
+  build_check_workflow:
+    jobs:
+      - build    
