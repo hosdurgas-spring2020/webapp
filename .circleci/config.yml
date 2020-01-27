@@ -11,10 +11,38 @@ jobs:
       - image: circleci/node:latest
     steps:
       - checkout
-      - run: 
-          name: "Build"
-          command: |
-            echo "Hello Worlds"
+
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install npm wee
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+    test:
+      docker:
+       - image: circleci/node:4.8.2-jessie
+      
+      steps:
+        - checkout
+        - run:
+            name: Test
+            command: npm server.js
+        # - run:
+        #     name: Generate code coverage
+        #     command: './node_modules/.bin/nyc report --reporter=text-lcov'
+        # - store_artifacts:
+        #     path: test-results.xml
+        #     prefix: tests
+        # - store_artifacts:
+        #     path: coverage
+        #     prefix: coverage
+
             
   
   
@@ -25,4 +53,5 @@ workflows:
       - pr_check
   build_check_workflow:
     jobs:
-      - build    
+      - build 
+      - test
