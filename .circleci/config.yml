@@ -9,6 +9,6 @@ jobs:
   
 workflows:
   version: 2
-  build_and_test:
+  pr_check_workflow:
     jobs:
-      -pr_check
+      - pr_check
