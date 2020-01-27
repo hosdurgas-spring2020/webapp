@@ -1,0 +1,19 @@
+---
+version: 2
+jobs:
+  pr_check:
+    docker:
+      - image: circleci/node:stretch
+    steps:
+      - checkout
+      - run: 
+        name: Gradle Builf
+        command: |
+          echo "Hello World"
+
+
+workflows:
+  version: 2
+  pr-check-workflow:
+    jobs:
+    -pr_check
