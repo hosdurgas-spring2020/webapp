@@ -13,9 +13,8 @@ jobs:
       - checkout
       - run: 
           name: "Build"
-          command: |
-            echo "Hello Worlds"
-            exit 1
+          command: node server.js
+            
   
   
 workflows:
