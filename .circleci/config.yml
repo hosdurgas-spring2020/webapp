@@ -5,7 +5,7 @@ jobs:
       - image: circleci/node:latest
     steps:
       - checkout
-      - run: 
+      - run: echo "Hello World"
   build:
     docker:
       - image: circleci/node:latest
@@ -15,7 +15,7 @@ jobs:
           name: "Build"
           command: |
             echo "Hello Worlds"
-            exit 1
+            
   
   
 workflows:
