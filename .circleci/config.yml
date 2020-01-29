@@ -16,7 +16,7 @@ jobs:
       
       - run: sudo apt-get install mysql-server
       - run: sudo service mysql start
-      - run: mysql -u root 
+      - run: sudo mysql -u root 
 
 workflows:
   version: 2
