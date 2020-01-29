@@ -18,7 +18,7 @@ jobs:
       - run: 
           command: |
             
-            echo "SELECT OK" | mysql --user=root --host=localhost --execute='CREATE test' 
+            echo "SELECT OK" | mysql --user=root --host=localhost --execute='CREATE DATABASE test' 
             
 
 workflows:
