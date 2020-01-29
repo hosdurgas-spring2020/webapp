@@ -10,6 +10,7 @@ const authenticate = require('./auth')
 const {getreq,putreq} = require('./userServices')
 var isAuth = false
 const services = require('./billServices')
+const billAuth = require('./billAuth')
 
 validatePass=(pass) => {
   var schema = new passwordValidator();
@@ -143,8 +144,9 @@ router.post('/', (req, res) => {
 router.get('/self', authetnticate,getreq)
 router.put('/self',authenticate,putreq)
 router.post('/bill',authenticate,services.createBill)
-router.post('/bills',authenticate,services.getAllBills)
-
+router.get('/bills',authenticate,services.getAllBills)
+router.put('/bill/:id',authenticate,billAuth,services.updateBill)
+router.delete('/bill/:id',authenticate,billAuth,services.deleteBill)
 
 
 

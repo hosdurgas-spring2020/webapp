@@ -60,8 +60,76 @@ getAllBills = (req,res) => {
     connection.query(`SELECT * FROM bill_table WHERE owner_id = ?`,[res.locals.ownerid],
     (err,row) => {
         if (err) return res.status(500).json({msg:"Database Error"})
+        if(row.length==0){
+            res.status(400).json({
+              msg:"No bills exist"
+            });
+        }
         return res.status(200).json(row)
     });
+
+}
+
+updateBill = (req,res) =>{
+    
+    const billid = req.params.id
+    const {
+        vendor,
+        bill_date,
+        amount_due,
+        due_date,
+        categories,
+        paymentStatus
+    } = req.body
+    var date = new Date()
+    var new_cat=''
+    for (i in categories){
+        new_cat=new_cat+categories[i]+","
+    }
+
+    new_cat1 = "["+new_cat.slice(0,new_cat.length-1)+"]"
+    queryStr = `UPDATE  bill_table  SET   updated_ts  =  ?  ,  vendor  =  ? ,  bill_date  =  ? ,  due_date  =  ? ,  amount_due  =  ? ,  categories  =  ? ,  paymentStatus  =  ?  WHERE ( id  =  ? );` 
+    connection.query(queryStr,
+        [
+            date,
+            vendor,
+            bill_date,
+            amount_due,
+            due_date,
+            new_cat1,
+            paymentStatus,
+            billid
+        ],
+        (err,row) =>{
+            
+            if (err) {
+            console.error(err)
+            res.status(500).json({msg:"Database Error"})
+            }
+            
+            if(row.affectedRows == 0)
+                return res.status(400).json({msg:"Bill Doesn't Exist"})
+            connection.query(`SELECT * FROM bill_table WHERE id = ?`,[billid],
+            (err,row) => {
+                if (err) return res.status(500).json({msg:"Database Error"})
+                return res.status(200).json(row)
+        });
+            
+    });
+}
+
+
+deleteBill = (req,res) => {
+    const billid = req.params.id
+    connection.query(`DELETE FROM bill_table WHERE (id = ?)`,[billid],
+    (err,row) => { 
+        if (err) return res.status(500).json({msg:"Database Error"})
+        if(row.affectedRows == 0)
+        return res.status(400).json({msg:"Bill Doesn't Exist"})
+        // console.log(row)
+        return res.status(204).json()
+    }
+    );
 
 }
 
@@ -70,5 +138,4 @@ getAllBills = (req,res) => {
 
 
 
-
-module.exports = {createBill, getAllBills}
+module.exports = {createBill, getAllBills, updateBill,deleteBill}
