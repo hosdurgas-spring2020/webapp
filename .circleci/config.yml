@@ -24,15 +24,15 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
-    test:
-      docker:
-       - image: circleci/node:4.8.2-jessie
+
+  test:
+    docker:
+      - image: circleci/node:4.8.2-jessie
       
-      steps:
-        - checkout
-        - run:
-            name: Test
-            command: npm server.js
+    steps:
+      - checkout
+      - run: node server.js
+          
         # - run:
         #     name: Generate code coverage
         #     command: './node_modules/.bin/nyc report --reporter=text-lcov'
