@@ -54,4 +54,4 @@ workflows:
   build_check_workflow:
     jobs:
       - build 
-      - test
+      
