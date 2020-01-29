@@ -24,7 +24,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
-
+      - run: node server.js
   test:
     docker:
       - image: circleci/node:4.8.2-jessie
