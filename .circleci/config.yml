@@ -2,8 +2,9 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/mysql:5.7.29  # The primary container where steps are run
       - image: circleci/node:latest
+      - image: circleci/mysql:5.7.29  # The primary container where steps are run
+      
         environment:
           
           
