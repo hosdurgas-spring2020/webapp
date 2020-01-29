@@ -30,7 +30,11 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: exit(0) | node server.js
+      - run: 
+          command: node server.js
+          background: true
+      - run: ./node_modules/.bin/wait-on http://localhost:5000
+      - run: ./node_modules/.bin/cypress run --config video=false
       
   
     
