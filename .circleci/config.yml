@@ -6,7 +6,7 @@ jobs:
       # - image: circleci/mysql:8.0.4
         environment:
           
-          MYSQL_DATABASE: test_db
+          MYSQL_DATABASE: test
           MYSQL_USER: root
 
           
@@ -18,7 +18,7 @@ jobs:
       - run: 
           command: |
             
-            echo "SELECT 'OK';" | mysql --user=root --host=localhost "$MYSQL_DATABASE" 
+            echo "SELECT OK" | mysql --user=root --host=localhost "$MYSQL_DATABASE" 
             
 
 workflows:
