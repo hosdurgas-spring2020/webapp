@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS `Persons`;
+DROP TABLE IF EXISTS Persons;
 
 CREATE TABLE Persons (
     PersonID int,

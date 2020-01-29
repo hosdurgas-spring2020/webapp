@@ -1,68 +1,36 @@
 version: 2
 jobs:
-  pr_check:
+  build:
     docker:
-      - image: circleci/node:latest
-      - image: circleci/mysql:5.7.29
+      - image: circleci/node:latest # The primary container where steps are run
+      - image: circleci/mysql:8.0.4
         environment:
-          MYSQL_HOST: localhost
-          MYSQL_DATABASE: test
-          MYSQL_USER: root
-          # MYSQL_PASSWORD: passw0rd
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: user
+          MYSQL_PASSWORD: passw0rd
+
     steps:
       - checkout
+      - run:
+      # Our primary container isn't MYSQL so run a sleep command until it's ready.
+          name: Waiting for MySQL to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
       - run:
           name: Install MySQL CLI; Import dummy data; run an example query
           command: |
             sudo apt-get install default-mysql-client
-            mysql/ --execute="CREATE database test_db"
-            
-  build:
-    docker:
-      - image: circleci/node:latest
-    steps:
-      - checkout
-
-      - run:
-          name: Update npm
-          command: 'sudo npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: Install npm wee
-          command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
-      - run: node server.js
-  test:
-    docker:
-      - image: circleci/node:4.8.2-jessie
-      
-    steps:
-      - checkout
-      - run: node server.js
-          
-        # - run:
-        #     name: Generate code coverage
-        #     command: './node_modules/.bin/nyc report --reporter=text-lcov'
-        # - store_artifacts:
-        #     path: test-results.xml
-        #     prefix: tests
-        # - store_artifacts:
-        #     path: coverage
-        #     prefix: coverage
-
-            
-  
-  
+            mysql -h 127.0.0.1 -u user -ppassw0rd test_db < sql-data/dummy.sql
+            mysql -h 127.0.0.1 -u user -ppassw0rd --execute="SELECT * FROM test_db.Persons"
 workflows:
   version: 2
-  pr_check_workflow:
+  build-deploy:
     jobs:
-      - pr_check
-  # build_check_workflow:
-  #   jobs:
-  #     - build 
-      
+      - build
