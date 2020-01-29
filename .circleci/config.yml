@@ -32,7 +32,7 @@ jobs:
       # run tests!
       - run: 
           command: node server.js
-          background: true
+          # background: true
 
 workflows:
   version: 2
