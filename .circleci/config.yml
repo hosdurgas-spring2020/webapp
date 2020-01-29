@@ -14,7 +14,7 @@ jobs:
     steps:
       - checkout
       
-      - run: sudo yum install mysql-community-server
+      - run: sudo apt-get install mysql-server
       - run: sudo service mysql start
       - run: mysql -u root 
 
