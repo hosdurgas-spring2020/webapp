@@ -24,6 +24,7 @@
     "mdbreact": "^4.23.1",
     "mocha": "^7.0.0",
     "mongoose": "^5.1.6",
+    "nodemon": "^1.19.4",
     "password-validator": "^5.0.3",
     "react-icons": "^3.8.0",
     "react-paypal-button-v2": "^2.6.1",
