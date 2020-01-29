@@ -3,11 +3,11 @@ jobs:
   build:
     docker:
       - image: circleci/node:latest # The primary container where steps are run
-      - image: circleci/mysql:8.0.4
-        environment:
-          MYSQL_ROOT_PASSWORD: Shakti123
-          MYSQL_DATABASE: test_db
-          MYSQL_USER: root
+      # - image: circleci/mysql:8.0.4
+      #   environment:
+      #     MYSQL_ROOT_PASSWORD: Shakti123
+      #     MYSQL_DATABASE: test_db
+      #     MYSQL_USER: root
 
           
 
@@ -24,11 +24,10 @@ jobs:
               sleep 1
             done
             echo Failed waiting for MySQL && exit 1
-      - run:
-          name: Install MySQL CLI; Import dummy data; run an example query
-          command: |
-            mysql
-            
+      - run: sudo yum install mysql-community-server
+      - run: sudo service mysql start
+      - run: mysql -u root 
+
 workflows:
   version: 2
   build-deploy:
