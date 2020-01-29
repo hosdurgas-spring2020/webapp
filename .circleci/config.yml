@@ -2,22 +2,22 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:latest # The primary container where steps are run
+      - image: circleci/mysql:5.7.29  # The primary container where steps are run
       # - image: circleci/mysql:8.0.4
-      #   environment:
-      #     MYSQL_ROOT_PASSWORD: Shakti123
-      #     MYSQL_DATABASE: test_db
-      #     MYSQL_USER: root
+        environment:
+          
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: root
 
           
 
     steps:
       - checkout
-      - run: sudo apt-get install mysql-server
-      - run: sudo service mysql start
+      # - run: sudo apt-get install mysql-server
+      # - run: sudo service mysql start
       - run: 
           command: |
-            sudo mysql -u root --execute = "CREATE DATABASE usersca;"
+            echo "SELECT 'OK';" | mysql --user=root --host=mysql "$MYSQL_DATABASE" 
             
 
 workflows:
