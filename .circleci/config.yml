@@ -13,12 +13,12 @@ jobs:
 
     steps:
       - checkout
-      
       - run: sudo apt-get install mysql-server
       - run: sudo service mysql start
-      - run: sudo mysql -u root 
-      - run: |
-          mysql -d create database users;
+      - run: 
+          command: |
+            sudo mysql -u root --execute = "create database users;"
+            
 
 workflows:
   version: 2
