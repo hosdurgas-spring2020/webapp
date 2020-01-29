@@ -17,7 +17,7 @@ jobs:
       # - run: sudo service mysql start
       - run: 
           command: |
-            echo "SELECT 'OK';" | mysql --user=root --host=mysql "$MYSQL_DATABASE" 
+            echo "SELECT 'OK';" | mysql --user=root --host=localhost "$MYSQL_DATABASE" 
             
 
 workflows:
