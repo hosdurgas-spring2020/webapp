@@ -12,6 +12,7 @@ jobs:
     steps:
       - checkout
       - run: echo "Hello World"
+      - run: node config.js
   build:
     docker:
       - image: circleci/node:latest
@@ -57,7 +58,7 @@ workflows:
   pr_check_workflow:
     jobs:
       - pr_check
-  build_check_workflow:
-    jobs:
-      - build 
+  # build_check_workflow:
+  #   jobs:
+  #     - build 
       
