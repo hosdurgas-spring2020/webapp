@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/mysql:5.7.29  # The primary container where steps are run
-      # - image: circleci/mysql:8.0.4
+      - image: circleci/node:latest
         environment:
           
           
@@ -19,6 +19,20 @@ jobs:
           command: |
             
             echo "SELECT OK" | mysql --user=root --host=localhost --execute='CREATE DATABASE test' 
+
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install npm wee
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      - run: node server.js
             
 
 workflows:
