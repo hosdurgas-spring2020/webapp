@@ -14,8 +14,8 @@ jobs:
 
     steps:
       - checkout
-      - run: apt-get install mysql-server
-      - run: service mysql start
+      - run: sudo apt-get install mysql-server
+      - run: sudo service mysql start
       - run: 
           command: |
             
@@ -23,7 +23,7 @@ jobs:
 
       - run:
           name: Update npm
-          command: 'npm install -g npm@latest'
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
