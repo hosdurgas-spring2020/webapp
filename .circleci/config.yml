@@ -30,7 +30,8 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: echo "STATUS OK" | node server.js
-
+      - run: exit(0) | node server.js
+      
+  
     
       
