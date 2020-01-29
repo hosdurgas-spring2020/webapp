@@ -11,7 +11,7 @@ jobs:
           # MYSQL_PASSWORD: passw0rd
     steps:
       - checkout
-       run:
+      - run:
           name: Install MySQL CLI; Import dummy data; run an example query
           command: |
             sudo apt-get install default-mysql-client
