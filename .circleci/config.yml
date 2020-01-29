@@ -3,6 +3,12 @@ jobs:
   pr_check:
     docker:
       - image: circleci/node:latest
+      - image: circleci/mysql:8.0.4
+        environment:
+          MYSQL_HOST: localhost
+          MYSQL_DATABASE: test
+          MYSQL_USER: root
+          # MYSQL_PASSWORD: passw0rd
     steps:
       - checkout
       - run: echo "Hello World"
