@@ -15,7 +15,7 @@ jobs:
           name: Install MySQL CLI; Import dummy data; run an example query
           command: |
             sudo apt-get install default-mysql-client
-            mysql -h 127.0.0.1 -u user -ppassw0rd --execute="CREATE database test_db"
+            mysql -h 127.0.0.1:3006 -u user -ppassw0rd --execute="CREATE database test_db"
             
   build:
     docker:
