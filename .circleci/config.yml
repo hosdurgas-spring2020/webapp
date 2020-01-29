@@ -32,6 +32,12 @@ jobs:
       # run tests!
       - run: 
           command: node server.js
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
           
       
       
