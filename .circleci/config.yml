@@ -13,10 +13,11 @@ jobs:
 
     steps:
       - checkout
-      # - run: sudo apt-get install mysql-server
+      - run: sudo apt-get install mysql-server
       # - run: sudo service mysql start
       - run: 
           command: |
+            
             echo "SELECT 'OK';" | mysql --user=root --host=localhost "$MYSQL_DATABASE" 
             
 
