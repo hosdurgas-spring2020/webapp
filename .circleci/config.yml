@@ -11,8 +11,13 @@ jobs:
           # MYSQL_PASSWORD: passw0rd
     steps:
       - checkout
-      - run: echo "Hello World"
-      - run: node config.js
+       run:
+          name: Install MySQL CLI; Import dummy data; run an example query
+          command: |
+            sudo apt-get install default-mysql-client
+            mysql -h 127.0.0.1 -u user -ppassw0rd test_db < sql-data/dummy.sql
+            mysql -h 127.0.0.1 -u user -ppassw0rd --execute="SELECT * FROM test_db.Persons"
+
   build:
     docker:
       - image: circleci/node:latest
