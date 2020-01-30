@@ -32,7 +32,7 @@ jobs:
       # run tests!
       - run:
           name: "Build" 
-          command: node server.js
+          command: node ciserver.js
           # background: true
       - run: 
           name: "Test"
@@ -71,7 +71,7 @@ jobs:
       # run tests!
       - run:
           name: "Build" 
-          command: node server.js
+          command: node ciserver.js
           # background: true
       - run: 
           name: "Test"
