@@ -8,7 +8,8 @@ app.use(express.json());
 // Use Routes
 // app.use('/api/items', require('./routes/api/items'));
 
-app.use('/v1/user', require('./routes/api/users'));
+// app.use('/v1/user', require('./routes/api/users'));
+console.log("Compiled succeful")
 
 const port = process.env.PORT || 5000;
 

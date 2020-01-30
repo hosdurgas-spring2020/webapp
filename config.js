@@ -9,7 +9,7 @@ var connection = mysql.createConnection({
 connection.connect((err)=>{
 if(!err) {
     console.log("Database is connected");
-    connection.destroy()
+    // connection.destroy()s
 
 } else {
     console.log("Error while connecting with database");
