@@ -5,8 +5,9 @@ const connection = require('../../config')
 authetnticate=(req,res,next)=>{
     var isauth = false
   
-    console.log("Here")
+   
     var user = auth(req);
+    console.log(user)
     if(user==undefined||user==null){
     return res.status(401).json({msg: "Access Denied"})
     

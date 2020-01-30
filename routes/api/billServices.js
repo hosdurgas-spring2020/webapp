@@ -57,7 +57,8 @@ createBill = (req,res) => {
         
         connection.query(`SELECT * FROM bill_table WHERE id = ?`,[id],
         (err,row) => {
-                if (err) { console.error(err)
+                if (err) { 
+                    console.error(err)
                     return res.status(500).json({msg:"Database Error"})
                 }
                 return res.status(200).json(row)

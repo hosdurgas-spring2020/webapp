@@ -41,9 +41,10 @@ validateEmail=(user)=>{
 // @desc    Register new user
 // @access  Public
 router.post('/', (req, res) => {
-  console.log(typeof createBill)
+  // console.log(typeof createBill)
+  console.log("Here")
   const { first_name,last_name, email_address, password } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
   var check = false;
 
   // Simple validationr
