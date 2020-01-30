@@ -13,7 +13,7 @@ app.use('/v1/user', require('../../routes/api/users'), (req, res) => {
 describe('POST /v1/user', () => {
     it('responds with json', (done) => {
       request(app)
-        .post('/api/users')
+        .post('/v1/user')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(400, done);
