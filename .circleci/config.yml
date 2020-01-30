@@ -33,7 +33,7 @@ jobs:
       - run: 
           command: node ciserver.js
           # background: true
-  pr_check:
+  test:
     docker:
       - image: node:11.10.1
       - image: circleci/mysql:5.7.29
@@ -64,7 +64,7 @@ jobs:
 
       # run tests!
       - run: 
-          command: node ciserver.js
+          command: npm run test
 
 
 
@@ -73,9 +73,11 @@ workflows:
   build-deploy:
     jobs:
       - build
+      - test
   pr_check_workflow:
     jobs:
-      - pr_check:
+      - build
+      - test:
           filters:
             branches:
               only: master
