@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "server": "nodemon server.js",
-    "test": "mocha test/api/test_post.js "
+    "test": "mocha test/api/test_post.js && echo 'Done' "
   },
   "author": "Shakti",
   "license": "",
