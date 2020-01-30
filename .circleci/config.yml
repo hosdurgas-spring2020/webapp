@@ -23,7 +23,7 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
-      - run: apt install mocha
+      - run: apt-get install mocha
       - save_cache:
           paths:
             - node_modules
