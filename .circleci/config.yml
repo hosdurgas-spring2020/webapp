@@ -23,7 +23,7 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
-
+      # - run: apt-get install mocha
       - save_cache:
           paths:
             - node_modules
@@ -36,7 +36,9 @@ jobs:
           # background: true
       - run: 
           name: "Test"
-          command: npm test
+          command: |
+            npm run test
+            echo 'Done'
   build:
     docker:
       - image: node:11.10.1
@@ -73,7 +75,7 @@ jobs:
           # background: true
       - run: 
           name: "Test"
-          command: npm test
+          command: npm run test
 
 
 
