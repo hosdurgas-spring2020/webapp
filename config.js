@@ -4,11 +4,13 @@ var connection = mysql.createConnection({
   user     : 'root',
 //   password : 'admin',
   database : 'test',
- 
+
 });
 connection.connect((err)=>{
 if(!err) {
     console.log("Database is connected");
+    connection.destroy()
+
 } else {
     console.log("Error while connecting with database");
 }
