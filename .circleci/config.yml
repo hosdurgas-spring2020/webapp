@@ -23,7 +23,7 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
-      - run: apt-get install mocha
+      # - run: apt-get install mocha
       - save_cache:
           paths:
             - node_modules
@@ -75,8 +75,7 @@ jobs:
           # background: true
       - run: 
           name: "Test"
-          command: mocha test/api/test_post.js
-
+          command: npm run test 
 
 
 workflows:
