@@ -37,7 +37,7 @@ jobs:
       - run: 
           name: "Test"
           command: |
-            mocha test/api/test_post.js
+            npm run test
             echo 'Done'
   build:
     docker:
@@ -75,7 +75,8 @@ jobs:
           # background: true
       - run: 
           name: "Test"
-          command: npm run test 
+          command: npm run test
+
 
 
 workflows:
