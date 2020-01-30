@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "server": "nodemon server.js",
-    "test": "mocha --recursive --exit"
+    "test": "mocha test/api/test_post.js "
   },
   "author": "Shakti",
   "license": "",
@@ -24,8 +24,7 @@
     "nodemon": "^1.19.4",
     "password-validator": "^5.0.3",
     "supertest": "^4.0.2",
-    "uuid": "^3.4.0",
-    "wait-on": "^4.0.0"
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "nodemon": "^1.17.5"
