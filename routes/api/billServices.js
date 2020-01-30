@@ -3,6 +3,12 @@ const connection = require('../../config')
 var auth = require('basic-auth');
 const uuidv4 = require('uuid/v4');
 
+checkEnum = (ps) =>{
+    if (ps == 'paid' || ps == 'due' || ps == 'no_payment_required' || ps == 'past_due')
+        return true
+    return false
+}
+
 
 
 createBill = (req,res) => {
@@ -10,11 +16,15 @@ createBill = (req,res) => {
     const {
         vendor,
         bill_date,
-        amount_due,
         due_date,
+        amount_due,
+
         categories,
         paymentStatus
     } = req.body
+
+    if(!checkEnum(paymentStatus)) return res.status(401).json({msg:"Payment Status can be only paid, due, past_due, no_payment_required"})
+    
     var new_cat=''
     for (i in categories){
         new_cat=new_cat+categories[i]+","
@@ -61,7 +71,7 @@ getAllBills = (req,res) => {
     (err,row) => {
         if (err) return res.status(500).json({msg:"Database Error"})
         if(row.length==0){
-            res.status(400).json({
+            return res.status(400).json({
               msg:"No bills exist"
             });
         }
@@ -94,8 +104,8 @@ updateBill = (req,res) =>{
             date,
             vendor,
             bill_date,
-            amount_due,
             due_date,
+            amount_due,
             new_cat1,
             paymentStatus,
             billid
@@ -112,7 +122,8 @@ updateBill = (req,res) =>{
             connection.query(`SELECT * FROM bill_table WHERE id = ?`,[billid],
             (err,row) => {
                 if (err) return res.status(500).json({msg:"Database Error"})
-                return res.status(200).json(row)
+                const {owner_id, ...pl} = row[0]
+                return res.status(200).json([pl])
         });
             
     });
@@ -130,12 +141,22 @@ deleteBill = (req,res) => {
         return res.status(204).json()
     }
     );
+}
 
+
+getBill = (req,res) =>{
+    const billid = req.params.id
+    console.log(billid)
+    connection.query('SELECT * FROM bill_table WHERE id = ?',[billid],
+    (err,row) => {
+        if (err) 
+            return res.status(500).json({msg:"Database Error"})
+        if(row.length == 0) return res.status(401).json({msg:"No such bill"})
+        return res.status(200).json(row[0])
+    });
 }
 
 
 
 
-
-
-module.exports = {createBill, getAllBills, updateBill,deleteBill}
+module.exports = {createBill, getAllBills, updateBill,deleteBill,getBill}

@@ -7,7 +7,7 @@ authetnticate=(req,res,next)=>{
   
     var user = auth(req);
     if(user==undefined||user==null){
-    return res.status(400).json({msg: "Access Denied"})
+    return res.status(401).json({msg: "Access Denied"})
     
      }
     connection.query(`SELECT * FROM finaltable  WHERE email_address = ?`,[user.name],
@@ -17,7 +17,7 @@ authetnticate=(req,res,next)=>{
         return res.status(500).json({msg:"Database Error"})
     
       }
-      
+      if(row.length == 0 ) return res.status(400).json({msg:"User Doesn't Exist"})
       else{
         
         bcrypt.compare(user.pass,row[0].password)
