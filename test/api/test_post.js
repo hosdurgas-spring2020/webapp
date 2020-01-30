@@ -16,7 +16,7 @@ describe('POST /v1/user', () => {
         .post('/v1/user')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .expect(400, done);
+        .expect(401, done);
     });
   });
 
