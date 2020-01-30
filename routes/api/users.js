@@ -147,7 +147,7 @@ router.post('/bill',authenticate,services.createBill)
 router.get('/bills',authenticate,services.getAllBills)
 router.put('/bill/:id',authenticate,billAuth,services.updateBill)
 router.delete('/bill/:id',authenticate,billAuth,services.deleteBill)
-
+router.get('/bill/:id',authenticate,billAuth,services.getBill)
 
 
 

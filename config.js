@@ -4,7 +4,7 @@ var connection = mysql.createConnection({
   user     : 'root',
 //   password : 'admin',
   database : 'test',
-  connectTimeout: 10
+ 
 });
 connection.connect((err)=>{
 if(!err) {
