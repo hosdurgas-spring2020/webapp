@@ -1,6 +1,6 @@
 # Web App for CSYE 6225
 
-Web App to track bills of users
+Web App to track bills of users.
 
 ## Getting Started
 
