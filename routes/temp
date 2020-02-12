@@ -1,0 +1,44 @@
+  const billid = req.params.id
+    let content = {}
+
+    let file_name = res.locals.user + "-" + billid.slice(0,7) +".pdf"
+    let path = 'files/'+file_name
+    let date = new Date().toISOString().slice(0,10);
+    fid = uuidv4()
+
+    connection.query('SELECT * FROM bill_table WHERE id = ?',[billid], (err,row) => {
+        if(err) return res.status(500).json({msg:"Database Error"})
+        if(row.length == 0) return res.status(400).json({msg:"Bill Doen't Exist"})
+        content = JSON.stringify(row[0]);
+        console.log(content)
+        fs.writeFile(path,content , (err, file) => {
+            if (err) throw err;
+            if (fs.existsSync(path)) {
+                return res.status(400).json({msg:"File Exists"})
+            }
+            
+            queryStr = `INSERT INTO filedata_table (id, file_name, url, uploaded_on) VALUES(?,?,?,CURDATE())`
+            connection.query(queryStr,[fid, file_name, path],
+                (err,row) => {
+                    if(err) return res.status(500).json({msg:"Database Error"})
+                    res.status(201).json({
+                        file_name:file_name,
+                        id : fid,
+                        url: path,
+                        uploaded_on: date
+
+                    })
+                    
+
+                });
+            
+        });
+    });
+    
+   
+
+
+   SELECT *
+    FROM bill_table
+    INNER JOIN filedata_table
+    ON bill_table.attachments = filedata_table.file_id
