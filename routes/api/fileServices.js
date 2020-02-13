@@ -16,6 +16,10 @@ postFile = (req, res) => {
   const file = req.files.file;
   const fileid = uuidv4();
 
+  // console.log(file);
+  let md5 = file.md5;
+  let size = file.size;
+
   let file_name = billid.slice(0, 7);
   let extension = file.mimetype.split("/")[1];
   let uploadPath = "uploads/" + file_name + "." + extension;
@@ -38,12 +42,13 @@ postFile = (req, res) => {
       return res.status(500).send(err);
     }
 
-    queryStr = `INSERT INTO filedata_table (bill_id,file_id, file_name, url, uploaded_on) VALUES(?,?,?,?,CURDATE())`;
+    queryStr = `INSERT INTO filedata_table (bill_id,file_id, file_name, url, uploaded_on,md5,size) VALUES(?,?,?,?,CURDATE(),?,?)`;
     connection.query(
       queryStr,
-      [billid, fileid, file_name + "." + extension, uploadPath],
+      [billid, fileid, file_name + "." + extension, uploadPath, md5, size],
       (err, row) => {
         if (err) {
+          console.log(err);
           if (err.code == "ER_DUP_ENTRY")
             return res
               .status(500)
@@ -113,7 +118,7 @@ getFile = (req, res) => {
       if (err) return res.status(500).json({ msg: "Database Error" });
       if (row.length == 0 || row == undefined)
         return res.status(401).json({ msg: "No such Files" });
-      let { bill_id, ...pl } = row[0];
+      let { bill_id, md5, size, ...pl } = row[0];
       return res.status(201).json(pl);
     }
   );
