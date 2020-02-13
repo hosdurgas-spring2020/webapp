@@ -102,6 +102,7 @@ dist
 
 #uploads
 uploads/
+.vscode
 
 .dynamodb/
 
