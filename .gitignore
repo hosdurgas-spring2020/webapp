@@ -98,6 +98,12 @@ dist
 .fusebox/
 
 # DynamoDB Local files
+
+
+#uploads
+uploads/
+.vscode
+
 .dynamodb/
 
 # TernJS port file

@@ -87,7 +87,7 @@ createBill = (req, res) => {
 };
 
 getAllBills = (req, res) => {
-  // console.log(res.locals.ownerid
+  console.log(res.locals);
   connection.query(
     `SELECT * FROM
     (SELECT *
@@ -98,7 +98,7 @@ getAllBills = (req, res) => {
     WHERE owner_id = ?;`,
     [res.locals.ownerid],
     (err, row) => {
-      console.log(row);
+      // console.log(row);
       if (err) return res.status(500).json({ msg: "Database Error" });
       if (row.length == 0) {
         return res.status(400).json({
@@ -206,8 +206,9 @@ deleteBill = (req, res) => {
       if (err) return res.status(500).json({ msg: "Database Error" });
       if (row.affectedRows == 0)
         return res.status(400).json({ msg: "Bill Doesn't Exist" });
-      //   console.log(res);
-      if (row.attachments != null) {
+      console.log(row);
+
+      if (res.locals.attachments != null) {
         fileServices.deleteFile(req, res);
       }
 
