@@ -1,8 +1,8 @@
 var mysql = require("mysql");
-require("dotenv").config({ path: "../userdata.env" });
+require("dotenv").config({ path: "/env/properties/userdata.env" });
 var connection = mysql.createConnection({
   host: process.env.HOST,
-  user: process.env.USERNAME1,
+  user: process.env.USERNAME,
   password: process.env.PASSWORD,
   database: "test"
 });

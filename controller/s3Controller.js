@@ -2,10 +2,7 @@ const AWS = require("aws-sdk");
 const fs = require("fs");
 // var credentials = new AWS.SharedIniFileCredentials({profile: 'dev'});
 //  AWS.config.credentials = credentials;
-const s3 = new AWS.S3({
-  accessKeyId: "AKIA2OVE4GWQN2RTRJN6",
-  secretAccessKey: "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"
-});
+const s3 = new AWS.S3();
 
 // s3.listBuckets((err,data) =>{
 //     if(err) console.log(err)
