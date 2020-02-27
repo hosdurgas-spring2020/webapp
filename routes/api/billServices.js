@@ -206,14 +206,14 @@ deleteBill = (req, res) => {
       if (err) return res.status(500).json({ msg: "Database Error" });
       if (row.affectedRows == 0)
         return res.status(400).json({ msg: "Bill Doesn't Exist" });
-      console.log(row);
+      // console.log(row);
 
       if (res.locals.attachments != null) {
         fileServices.deleteFile(req, res);
       }
 
       // console.log(row)
-      return res.status(204).json();
+      else return res.status(204).json();
     }
   );
 };

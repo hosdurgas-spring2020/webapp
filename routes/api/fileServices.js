@@ -2,11 +2,12 @@ const bcrypt = require("bcryptjs");
 const connection = require("../../config");
 var auth = require("basic-auth");
 const uuidv4 = require("uuid/v4");
+const s3File = require("../../controller/s3Controller");
 var fs = require("fs");
 
 // console.log("hello")
 postFile = (req, res) => {
-  console.log(req.files.file);
+  // console.log(req.files.file);
   const billid = req.params.id;
 
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -41,6 +42,7 @@ postFile = (req, res) => {
       console.log(err);
       return res.status(500).send(err);
     }
+    s3File.uploadFile(file, file_name + "." + extension);
 
     queryStr = `INSERT INTO filedata_table (bill_id,file_id, file_name, url, uploaded_on,md5,size) VALUES(?,?,?,?,CURDATE(),?,?)`;
     connection.query(
@@ -88,6 +90,7 @@ deleteFile = (req, res) => {
       if (row.length == 0) return res.status(500).json({ msg: "No such file" });
       const fileid = row[0].file_id;
       let path = row[0].url;
+      let fname = row[0].file_name;
       connection.query(
         `DELETE FROM filedata_table WHERE (file_id = ?)`,
         fileid,
@@ -96,6 +99,7 @@ deleteFile = (req, res) => {
           if (row.affectedRows == 0)
             return res.status(400).json({ msg: "Bill Doesn't Exist" });
           // console.log(row)
+          s3File.deleteFile(fname);
           try {
             fs.unlinkSync(path);
           } catch (err) {
