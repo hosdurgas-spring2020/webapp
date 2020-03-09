@@ -3,24 +3,9 @@ jobs:
   pr_check:
     docker:
       - image: node:11.10.1
-      - image: circleci/mysql:5.7.29
-        environment:
-          MYSQL_HOST: localhost
-          MYSQL_DATABASE: test
-          MYSQL_USER: root
-      
-
-    # working_directory: ~/repo
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
 
       - run: npm install
       # - run: apt-get install mocha
@@ -31,10 +16,10 @@ jobs:
 
       # run tests!
       - run:
-          name: "Build" 
+          name: "Build"
           command: node ciserver.js
-          # background: true
-      - run: 
+
+      - run:
           name: "Test"
           command: |
             npm run test
@@ -42,19 +27,10 @@ jobs:
   build:
     docker:
       - image: node:11.10.1
-      - image: circleci/mysql:5.7.29
-        environment:
-          MYSQL_HOST: localhost
-          MYSQL_DATABASE: test
-          MYSQL_USER: root
-      
-
-    # working_directory: ~/repo
 
     steps:
       - checkout
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
@@ -63,36 +39,37 @@ jobs:
 
       - run: npm install
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - run:
+          command: unzip awscliv2.zip
 
+      - run:
+          command: ./aws/install
       # run tests!
       - run:
-          name: "Build" 
+          name: "Build"
           command: node ciserver.js
           # background: true
-      - run: 
+      - run:
           name: "Test"
           command: npm run test
+      - run:
+          command: |
+            apt-get update
+            apt-get install zip
 
-
-
+      - run:
+          command: zip -r artifacts.zip . -x '*aws/*' '*node_modules'
 workflows:
   version: 2
   pr_check_workflow:
     jobs:
-      - pr_check
-  build_deploy:
-    jobs:
-      - build:
-          filters:
-            branches:
-              only: master
-          
-      
-      
-  
-    
-      
+      - build
+  # build_deploy:
+  #   jobs:
+  #     - build:
+  #         filters:
+  #           branches:
+  #             only: master
