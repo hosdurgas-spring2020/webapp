@@ -28,10 +28,16 @@ jobs:
     docker:
       - image: node:11.10.1
 
-    # working_directory: ~/repo
-
     steps:
       - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: npm install
 
       - run:
           command: |
@@ -49,6 +55,18 @@ jobs:
       - run:
           name: "Test"
           command: npm run test
+
+      - run:
+          command: mkdir artifacts
+
+      - run:
+          command: shopt -s extglob dotglob
+      - run:
+          command: cp -r !(artifacts) artifacts
+      - run:
+          command: zip -r artifacts.zip .
+      - run:
+          command: printenv AWS_KEY
 
 workflows:
   version: 2
