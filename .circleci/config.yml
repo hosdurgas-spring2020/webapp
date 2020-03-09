@@ -62,7 +62,7 @@ jobs:
       - run:
           command: shopt -s extglob dotglob
       - run:
-          command: cp -r !(artifacts) artifacts
+          command: cp -r !(artifacts) artifacts/
       - run:
           command: zip -r artifacts.zip .
       - run:
