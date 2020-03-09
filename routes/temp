@@ -1,44 +1,98 @@
-  const billid = req.params.id
-    let content = {}
+version: 2
+jobs:
+  pr_check:
+    docker:
+      - image: node:11.10.1
+      - image: circleci/mysql:5.7.29
+        environment:
+          MYSQL_HOST: localhost
+          MYSQL_DATABASE: test
+          MYSQL_USER: root
+      
 
-    let file_name = res.locals.user + "-" + billid.slice(0,7) +".pdf"
-    let path = 'files/'+file_name
-    let date = new Date().toISOString().slice(0,10);
-    fid = uuidv4()
+    # working_directory: ~/repo
 
-    connection.query('SELECT * FROM bill_table WHERE id = ?',[billid], (err,row) => {
-        if(err) return res.status(500).json({msg:"Database Error"})
-        if(row.length == 0) return res.status(400).json({msg:"Bill Doen't Exist"})
-        content = JSON.stringify(row[0]);
-        console.log(content)
-        fs.writeFile(path,content , (err, file) => {
-            if (err) throw err;
-            if (fs.existsSync(path)) {
-                return res.status(400).json({msg:"File Exists"})
-            }
-            
-            queryStr = `INSERT INTO filedata_table (id, file_name, url, uploaded_on) VALUES(?,?,?,CURDATE())`
-            connection.query(queryStr,[fid, file_name, path],
-                (err,row) => {
-                    if(err) return res.status(500).json({msg:"Database Error"})
-                    res.status(201).json({
-                        file_name:file_name,
-                        id : fid,
-                        url: path,
-                        uploaded_on: date
+    steps:
+      - checkout
 
-                    })
-                    
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
-                });
-            
-        });
-    });
+      - run: npm install
+      # - run: apt-get install mocha
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # run tests!
+      - run:
+          name: "Build" 
+          command: node ciserver.js
+          # background: true
+      - run: 
+          name: "Test"
+          command: |
+            npm run test
+            echo 'Done'
+  build:
+    docker:
+      - image: node:11.10.1
+      - image: circleci/mysql:5.7.29
+        environment:
+          MYSQL_HOST: localhost
+          MYSQL_DATABASE: test
+          MYSQL_USER: root
+      
+
+    # working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # run tests!
+      - run:
+          name: "Build" 
+          command: node ciserver.js
+          # background: true
+      - run: 
+          name: "Test"
+          command: npm run test
+  
+
+
+workflows:
+  version: 2
+  pr_check_workflow:
+    jobs:
+      - pr_check
+  build_deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
+          
+      
+      
+  
     
-   
-
-
-   SELECT *
-    FROM bill_table
-    INNER JOIN filedata_table
-    ON bill_table.attachments = filedata_table.file_id
+      
