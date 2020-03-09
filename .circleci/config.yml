@@ -56,7 +56,9 @@ jobs:
           name: "Test"
           command: npm run test
       - run:
-          command: apt-get install zip
+          command: |
+            apt-get update
+            apt-get install zip
 
       - run:
           command: zip -r artifacts.zip
