@@ -57,17 +57,7 @@ jobs:
           command: npm run test
 
       - run:
-          command: mkdir artifacts
-
-      - run:
-          command: shopt -s extglob dotglob
-      - run:
-          command: cp -r !(artifacts) artifacts/
-      - run:
-          command: zip -r artifacts.zip .
-      - run:
-          command: printenv AWS_KEY
-
+          command: zip -r artifacts.zip
 workflows:
   version: 2
   pr_check_workflow:
