@@ -40,7 +40,7 @@ jobs:
           command: unzip awscliv2.zip
 
       - run:
-          command: sudo ./aws/install \
+          command: ./aws/install
       # run tests!
       - run:
           name: "Build"
