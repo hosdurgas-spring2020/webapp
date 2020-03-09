@@ -61,7 +61,7 @@ jobs:
             apt-get install zip
 
       - run:
-          command: zip -r artifacts.zip
+          command: zip -r artifacts.zip .
 workflows:
   version: 2
   pr_check_workflow:
