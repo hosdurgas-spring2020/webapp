@@ -35,10 +35,12 @@ jobs:
 
       - run:
           command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
-            && unzip awscliv2.zip \
-            && sudo ./aws/install \
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - run:
+          command: unzip awscliv2.zip
 
+      - run:
+          command: sudo ./aws/install \
       # run tests!
       - run:
           name: "Build"
@@ -52,7 +54,6 @@ workflows:
   version: 2
   pr_check_workflow:
     jobs:
-      - pr_check
       - build
   # build_deploy:
   #   jobs:
