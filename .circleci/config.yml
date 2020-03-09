@@ -61,7 +61,7 @@ jobs:
             apt-get install zip
 
       - run:
-          command: zip -r artifacts.zip .
+          command: zip -r artifacts.zip . -x '*aws/*' '*node_modules'
 workflows:
   version: 2
   pr_check_workflow:
