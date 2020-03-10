@@ -22,4 +22,4 @@ upload = filePath => {
   });
 };
 
-upload("../artifacts.zip");
+upload("./artifacts.zip");
