@@ -61,7 +61,13 @@ jobs:
             apt-get install zip
 
       - run:
-          command: zip -r artifacts.zip . -x '*aws/*' '*node_modules'
+          command: |
+            zip -r artifacts.zip . -x '*aws/*' '*node_modules'
+            ls
+      - run:
+          name: "Upload to S3"
+          command: npm run upload
+
 workflows:
   version: 2
   pr_check_workflow:
