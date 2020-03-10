@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "server": "nodemon server.js",
-    "test": "mocha test/api/test_post.js --exit "
+    "test": "mocha test/api/test_post.js --exit ",
+    "upload": "node CI/s3upload.js"
   },
   "author": "Shakti",
   "license": "",
