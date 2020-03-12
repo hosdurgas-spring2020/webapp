@@ -5,6 +5,14 @@ jobs:
       - image: node:11.10.1
 
     steps:
+      - attach_workspace:
+          at: .
+      - aws-cli/setup:
+          profile-name: default
+          aws-access-key-id: AWS_KEY
+          aws-secret-access-key: AWS_SECRET
+          aws-region: AWS_REGION
+
       - checkout
 
       - run: npm install
