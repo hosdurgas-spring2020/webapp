@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   pr_check:
     docker:
@@ -38,49 +38,50 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
-
-      - run:
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      - run:
-          command: unzip awscliv2.zip
-
-      - run:
-          command: ./aws/install
       # run tests!
       - run:
-          name: "Build"
+          name: "Test"
           command: node ciserver.js
           # background: true
       - run:
           name: "Test"
           command: npm run test
+
       - run:
+          name: "Zip"
           command: |
             apt-get update
             apt-get install zip
       - run:
-          command: |
-            mkdir ~/.aws 
-            echo -e "[default]\naws_access_key_id=$AWS_KEY\naws_secret_access_key=$AWS_SECRET\n" > ~/.aws/credentials
-
-      - run:
-          command: |
-            zip -r artifacts.zip . -x '*aws/*' '*node_modules'
-            ls
+          command: zip -r artifacts.zip . -x '*aws/*' '*node_modules'
       - run:
           name: "Upload to S3"
           command: npm run upload
+  deploy:
+    executor: aws-cli/default
+    steps:
+      - attach_workspace:
+          at: .
+      - aws-cli/setup:
+          profile-name: default
+          aws-access-key-id: AWS_KEY
+          aws-secret-access-key: AWS_SECRET
+          aws-region: AWS_REGION
       - run:
-          name: "CodeDeploy"
-          command: |
-            cat ~/.aws/credentials
+          name: CodeDeploy
+          command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=artifacts.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment
+
+orbs:
+  aws-cli: circleci/aws-cli@0.1.22
 
 workflows:
   version: 2
   pr_check_workflow:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
   # build_deploy:
   #   jobs:
   #     - build:
