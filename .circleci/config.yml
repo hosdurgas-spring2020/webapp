@@ -59,7 +59,7 @@ jobs:
           command: zip -r artifacts.zip . -x '*aws/*' '*node_modules'
       - run:
           name: "Upload to S3"
-          command: npm run
+          command: npm run upload
       - run:
           command: |
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
