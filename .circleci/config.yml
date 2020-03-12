@@ -28,7 +28,11 @@ jobs:
     docker:
       - image: node:11.10.1
 
+    executor: aws-cli/default
+
     steps:
+      - attach_workspace:
+          at: .
       - checkout
 
       - restore_cache:
@@ -56,17 +60,14 @@ jobs:
           command: zip -r artifacts.zip . -x '*aws/*' '*node_modules'
       - run:
           name: "Upload to S3"
-          command: npm run upload
-  deploy:
-    executor: aws-cli/default
-    steps:
-      - attach_workspace:
-          at: .
+          command: npm run
+
       - aws-cli/setup:
           profile-name: default
           aws-access-key-id: AWS_KEY
           aws-secret-access-key: AWS_SECRET
           aws-region: AWS_REGION
+
       - run:
           name: CodeDeploy
           command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=$CDS3BUCKET,key=artifacts.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment
@@ -78,7 +79,13 @@ workflows:
   version: 2
   pr_check_workflow:
     jobs:
-      - build
+      - pr_check
+  build_workflow:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
       - deploy:
           requires:
             - build
