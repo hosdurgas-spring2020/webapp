@@ -27,7 +27,7 @@ jobs:
   build:
     docker:
       - image: node:11.10.1
-
+    executor: aws-cli/default
     steps:
       - checkout
 
