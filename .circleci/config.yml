@@ -1,4 +1,7 @@
 version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@0.1.22
+
 jobs:
   pr_check:
     docker:
@@ -56,24 +59,27 @@ jobs:
           command: |
             apt-get update
             apt-get install zip
+            apt-get install unzip
+
       - run:
           command: zip -r artifacts.zip . -x '*aws/*' '*node_modules'
       - run:
           name: "Upload to S3"
           command: npm run
-
-      - aws-cli/setup:
-          profile-name: default
-          aws-access-key-id: AWS_KEY
-          aws-secret-access-key: AWS_SECRET
-          aws-region: AWS_REGION
+      - run:
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          command: |
+            mkdir ~/.aws 
+            echo -e "[default]\naws_access_key_id=$AWS_KEY\naws_secret_access_key=$AWS_SECRET\n" > ~/.aws/credentials
+            echo -e "[default]\nregion=$AWS_REGION\noutput=json\n" > ~/.aws/config
 
       - run:
           name: CodeDeploy
           command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=$CDS3BUCKET,key=artifacts.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment
-
-orbs:
-  aws-cli: circleci/aws-cli@0.1.22
 
 workflows:
   version: 2

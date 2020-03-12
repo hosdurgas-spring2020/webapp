@@ -109,6 +109,11 @@ workflows:
           command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=arti.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment --debug --region us-east-1
 
 
+- aws-cli/setup:
+          profile-name: default
+          aws-access-key-id: AWS_KEY
+          aws-secret-access-key: AWS_SECRET
+          aws-region: AWS_REGION
 
 
 
