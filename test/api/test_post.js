@@ -1,31 +1,24 @@
-const request = require('supertest');
-const express = require('express');
- 
+const request = require("supertest");
+const express = require("express");
+
 const app = express();
 
 // Bodyparser Middleware
 app.use(express.json());
- 
-app.use('/v1/user', require('../../routes/api/users'), (req, res) => {
-  res.status(200).json({ name: 'john' });
+
+app.use("/v1/user", require("../../routes/api/users"), (req, res) => {
+  res.status(200).json({ name: "john" });
 });
- 
-describe('POST /v1/user', () => {
-    it('responds with json', (done) => {
-      request(app)
-        .post('/v1/user')
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400, done);
-    });
+
+describe("POST /v1/user", () => {
+  it("responds with json", done => {
+    request(app)
+      .post("/v1/user")
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200, done);
   });
-
-
-
-
-
-
-
+});
 
 // const expect = require('chai');
 // const request = require('supertest');
@@ -52,4 +45,3 @@ describe('POST /v1/user', () => {
 //     })
 
 // });
-
