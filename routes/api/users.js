@@ -58,7 +58,7 @@ validateEmail = user => {
 // @route   POST api/users
 // @desc    Register new user
 // @access  Public
-router.post("/", (req, res) => {
+router.post("/user/", (req, res) => {
   // console.log(typeof createBill)
   console.log("Here");
   const { first_name, last_name, email_address, password } = req.body;
@@ -148,12 +148,9 @@ router.post("/", (req, res) => {
     }
   );
 });
-router.get("/sel", (req, res) => {
-  return res.send("hells");
-});
 
-router.get("/self", authetnticate, getreq);
-router.put("/self", authenticate, putreq);
+router.get("user/self", authetnticate, getreq);
+router.put("user/self", authenticate, putreq);
 router.post("/bill", authenticate, services.createBill);
 router.get("/bills", authenticate, services.getAllBills);
 router.put("/bill/:id", authenticate, billAuth, services.updateBill);
