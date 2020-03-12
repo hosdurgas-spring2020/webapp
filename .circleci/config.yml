@@ -62,7 +62,7 @@ jobs:
           aws-region: AWS_REGION
       - run:
           name: CodeDeploy
-          command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=arti.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment
+          command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=artifacts.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.22
@@ -72,9 +72,7 @@ workflows:
   pr_check_workflow:
     jobs:
       - build
-      - deploy:
-          requires:
-            - build
+      - deploy
   # build_deploy:
   #   jobs:
   #     - build:
