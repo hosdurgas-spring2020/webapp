@@ -76,12 +76,9 @@ jobs:
           command: |
             cat ~/.aws/credentials
             aws s3 ls
+
       - run:
-          command: |
-            update-ca-trust force-enable
-            update-ca-trust extract
-      - run:
-          command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=arti.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment --debug
+          command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=arti.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment --debug --no-verify-ssl
 
 workflows:
   version: 2
