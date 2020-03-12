@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   pr_check:
     docker:
@@ -55,36 +55,33 @@ jobs:
       - run:
           name: "Test"
           command: npm run test
-      - run:
-          command: |
-            apt-get update
-            apt-get install zip
-      - run:
-          command: |
-            mkdir ~/.aws 
-            echo -e "[default]\naws_access_key_id=$AWS_KEY\naws_secret_access_key=$AWS_SECRET\n" > ~/.aws/credentials
 
-      - run:
-          command: |
-            zip -r artifacts.zip . -x '*aws/*' '*node_modules'
-            ls
       - run:
           name: "Upload to S3"
           command: npm run upload
+  deloy:
+    executor: aws-cli/default
+    steps:
+      - attach_workspace:
+          at: .
+      - aws-cli/setup:
+          profile-name: default
       - run:
-          name: "CodeDeploy"
-          command: |
-            cat ~/.aws/credentials
-            aws s3 ls
+          name: CodeDeploy
+          command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=arti.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment
 
-      - run:
-          command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=arti.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment --debug --region us-east-1
+orbs:
+  aws-cli: circleci/aws-cli@0.1.22
 
 workflows:
   version: 2
   pr_check_workflow:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
+          context: aws-context
   # build_deploy:
   #   jobs:
   #     - build:
