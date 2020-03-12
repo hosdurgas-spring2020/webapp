@@ -46,10 +46,19 @@ jobs:
       - run:
           name: "Test"
           command: npm run test
+      - run:
+          command: ls
 
       - run:
           name: "Upload to S3"
-          command: npm run upload
+          command: |
+            aws deploy push \
+              --application-name csye6225-webapp \
+              --description "This is a revision for the application Webapp" \
+              --ignore-hidden-files \
+              --s3-location s3://codedeploy.shaktichetan.me/artifacts.zip \
+              --source . \
+
   deploy:
     executor: aws-cli/default
     steps:
