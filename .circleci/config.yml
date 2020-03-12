@@ -72,7 +72,9 @@ workflows:
   pr_check_workflow:
     jobs:
       - build
-      - deploy
+      - deploy:
+          requires:
+            - build
   # build_deploy:
   #   jobs:
   #     - build:
