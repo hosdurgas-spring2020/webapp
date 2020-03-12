@@ -59,7 +59,7 @@ jobs:
       - run:
           name: "Upload to S3"
           command: npm run upload
-  deloy:
+  deploy:
     executor: aws-cli/default
     steps:
       - attach_workspace:
