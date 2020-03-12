@@ -73,6 +73,15 @@ jobs:
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.22
+
+workflows:
+  version: 2
+  pr_check_workflow:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
   # build_deploy:
   #   jobs:
   #     - build:
