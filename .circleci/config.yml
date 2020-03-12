@@ -78,8 +78,8 @@ jobs:
             aws s3 ls
       - run:
           command: |
-          sudo update-ca-trust force-enable
-          sudo update-ca-trust extract
+            update-ca-trust force-enable
+            update-ca-trust extract
       - run:
           command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=arti.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment --debug
 
