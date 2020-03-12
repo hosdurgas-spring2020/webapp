@@ -1,6 +1,4 @@
-version: 2.1
-orbs:
-  aws-cli: circleci/aws-cli@0.1.22
+version: 2.0
 
 jobs:
   pr_check:
@@ -93,9 +91,6 @@ workflows:
           filters:
             branches:
               only: master
-      - deploy:
-          requires:
-            - build
   # build_deploy:
   #   jobs:
   #     - build:
