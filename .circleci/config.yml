@@ -91,9 +91,3 @@ workflows:
           filters:
             branches:
               only: master
-  # build_deploy:
-  #   jobs:
-  #     - build:
-  #         filters:
-  #           branches:
-  #             only: master
