@@ -78,7 +78,7 @@ jobs:
             aws s3 ls
 
       - run:
-          command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=arti.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment --debug --no-verify-ssl
+          command: aws deploy create-deployment --application-name csye6225-webapp --s3-location bucket=codedeploy.shaktichetan.me,key=arti.zip,bundleType=zip --deployment-group-name csye6225-webapp-deployment --debug --region us-east-1
 
 workflows:
   version: 2
