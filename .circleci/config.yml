@@ -71,6 +71,7 @@ jobs:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             ./aws/install
+            apt-get install less
       - run:
           command: |
             mkdir ~/.aws 
@@ -88,13 +89,13 @@ workflows:
       - pr_check
   build_workflow:
     jobs:
-      - build
-      #     filters:
-      #       branches:
-      #         only: master
-      # - deploy:
-      #     requires:
-      #       - build
+      - build:
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - build
   # build_deploy:
   #   jobs:
   #     - build:
