@@ -1,6 +1,4 @@
-version: 2.1
-orbs:
-  aws-cli: circleci/aws-cli@0.1.22
+version: 2.0
 
 jobs:
   pr_check:
@@ -31,11 +29,7 @@ jobs:
     docker:
       - image: node:11.10.1
 
-    executor: aws-cli/default
-
     steps:
-      - attach_workspace:
-          at: .
       - checkout
 
       - restore_cache:
@@ -93,12 +87,3 @@ workflows:
           filters:
             branches:
               only: master
-      - deploy:
-          requires:
-            - build
-  # build_deploy:
-  #   jobs:
-  #     - build:
-  #         filters:
-  #           branches:
-  #             only: master
