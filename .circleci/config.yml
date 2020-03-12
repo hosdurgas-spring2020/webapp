@@ -5,14 +5,6 @@ jobs:
       - image: node:11.10.1
 
     steps:
-      - attach_workspace:
-          at: .
-      - aws-cli/setup:
-          profile-name: default
-          aws-access-key-id: AWS_KEY
-          aws-secret-access-key: AWS_SECRET
-          aws-region: AWS_REGION
-
       - checkout
 
       - run: npm install
@@ -35,16 +27,8 @@ jobs:
   build:
     docker:
       - image: node:11.10.1
-    executor: aws-cli/default
-    steps:
-      - attach_workspace:
-          at: .
-      - aws-cli/setup:
-          profile-name: default
-          aws-access-key-id: AWS_KEY
-          aws-secret-access-key: AWS_SECRET
-          aws-region: AWS_REGION
 
+    steps:
       - checkout
 
       - restore_cache:
@@ -62,19 +46,17 @@ jobs:
       - run:
           name: "Test"
           command: npm run test
-      - run:
-          command: ls
 
+      - run:
+          name: "Zip"
+          command: |
+            apt-get update
+            apt-get install zip
+      - run:
+          command: zip -r artifacts.zip . -x '*aws/*' '*node_modules'
       - run:
           name: "Upload to S3"
-          command: |
-            aws deploy push \
-              --application-name csye6225-webapp \
-              --description "This is a revision for the application Webapp" \
-              --ignore-hidden-files \
-              --s3-location s3://codedeploy.shaktichetan.me/artifacts.zip \
-              --source . \
-
+          command: npm run upload
   deploy:
     executor: aws-cli/default
     steps:
