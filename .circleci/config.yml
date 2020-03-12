@@ -29,6 +29,7 @@ jobs:
     docker:
       - image: node:11.10.1
 
+    steps:
       - checkout
 
       - restore_cache:
