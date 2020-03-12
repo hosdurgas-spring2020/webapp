@@ -1,9 +1,9 @@
 var mysql = require("mysql");
 require("dotenv").config({ path: "/env/properties/userdata.env" });
 var connection = mysql.createConnection({
-  host: process.env.HOST,
-  user: process.env.USERNAME,
-  password: process.env.PASSWORD,
+  host: "localhost", //process.env.HOST ||
+  user: "root", // process.env.USERNAME ||
+  // password: process.env.PASSWORD || null,
   database: "test"
 });
 connection.connect(err => {

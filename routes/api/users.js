@@ -85,12 +85,10 @@ router.post("/", (req, res) => {
 
       //Validate passwords
       if (!validatePass(password)) {
-        return res
-          .status(400)
-          .json({
-            msg:
-              "Password should minimus of 8 characters and be a combination of uppercase, lowercase, and digits"
-          });
+        return res.status(400).json({
+          msg:
+            "Password should minimus of 8 characters and be a combination of uppercase, lowercase, and digits"
+        });
       }
 
       if (row.length >= 1) {
@@ -149,6 +147,9 @@ router.post("/", (req, res) => {
       }
     }
   );
+});
+router.get("/sel", (req, res) => {
+  return res.send("hells");
 });
 
 router.get("/self", authetnticate, getreq);
