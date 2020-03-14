@@ -149,6 +149,7 @@ router.post("/user/", (req, res) => {
   );
 });
 
+// router.get("v2/bills", authenticate, services.getAllBills);
 router.get("user/self", authetnticate, getreq);
 router.put("user/self", authenticate, putreq);
 router.post("/bill", authenticate, services.createBill);
@@ -156,6 +157,7 @@ router.get("/bills", authenticate, services.getAllBills);
 router.put("/bill/:id", authenticate, billAuth, services.updateBill);
 router.delete("/bill/:id", authenticate, billAuth, services.deleteBill);
 router.get("/bill/:id", authenticate, billAuth, services.getBill);
+router.get("bill/demo", getAllBills);
 
 router.post("/bill/:id/file", authenticate, billAuth, fileServices.postFile);
 router.delete(
