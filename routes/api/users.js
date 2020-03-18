@@ -8,13 +8,13 @@ var passwordValidator = require("password-validator");
 var validator = require("email-validator");
 const authenticate = require("./auth");
 const { getreq, putreq } = require("./userServices");
-// const SDC = require("statsd-client"),
-//   sdc = new SDC({
-//     port: "8125"
-//   });
+const SDC = require("statsd-client"),
+  sdc = new SDC({
+    port: "8125"
+  });
 
-var StatsD = require("node-dogstatsd").StatsD;
-var sdc = new StatsD();
+// var StatsD = require("node-dogstatsd").StatsD;
+// var sdc = new StatsD();
 const services = require("./billServices");
 const billAuth = require("./billAuth");
 const fileServices = require("./fileServices");
