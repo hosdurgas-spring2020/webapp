@@ -8,25 +8,16 @@ var passwordValidator = require("password-validator");
 var validator = require("email-validator");
 const authenticate = require("./auth");
 const { getreq, putreq } = require("./userServices");
-// var isAuth = false
+// const SDC = require("statsd-client"),
+//   sdc = new SDC({
+//     port: "8125"
+//   });
+
+var StatsD = require("node-dogstatsd").StatsD;
+var sdc = new StatsD();
 const services = require("./billServices");
 const billAuth = require("./billAuth");
 const fileServices = require("./fileServices");
-const multer = require("multer");
-
-const storage = multer.diskStorage({
-  destination: "./uploads/",
-  filename: function(req, file, cb) {
-    crypto.pseudoRandomBytes(16, function(err, raw) {
-      cb(
-        null,
-        raw.toString("hex") + Date.now() + "." + mime.extension(file.mimetype)
-      );
-    });
-  }
-});
-
-const upload = multer({ storage: storage });
 
 validatePass = pass => {
   var schema = new passwordValidator();
@@ -54,13 +45,14 @@ validateEmail = user => {
   );
   return true;
 };
-
+// let counter = 0;
 // @route   POST api/users
 // @desc    Register new user
 // @access  Public
 router.post("/user/", (req, res) => {
-  // console.log(typeof createBill)
-  console.log("Here");
+  sdc.increment("some.counter");
+  // console.log(some.counter);
+
   const { first_name, last_name, email_address, password } = req.body;
   // console.log(req.body)
   var check = false;
