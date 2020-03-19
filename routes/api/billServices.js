@@ -16,6 +16,7 @@ checkEnum = ps => {
 };
 
 createBill = (req, res) => {
+  sdc.increment("postbill.counter");
   const email_address = res.locals.user;
   const {
     vendor,
@@ -87,6 +88,7 @@ createBill = (req, res) => {
 };
 
 getAllBills = (req, res) => {
+  sdc.increment("getbill.counter");
   console.log(res.locals);
   connection.query(
     `SELECT * FROM
@@ -132,6 +134,7 @@ getAllBills = (req, res) => {
 };
 
 updateBill = (req, res) => {
+  sdc.increment("putbill.counter");
   const billid = req.params.id;
   const {
     vendor,
@@ -198,6 +201,7 @@ updateBill = (req, res) => {
 };
 
 deleteBill = (req, res) => {
+  sdc.increment("delbill.counter");
   const billid = req.params.id;
   connection.query(
     `DELETE FROM bill_table WHERE (id = ?)`,
@@ -219,6 +223,7 @@ deleteBill = (req, res) => {
 };
 
 getBill = (req, res) => {
+  sdc.increment("getbill.counter");
   const billid = req.params.id;
   console.log(billid);
   connection.query(

@@ -8,6 +8,7 @@ var fs = require("fs");
 // console.log("hello")
 postFile = (req, res) => {
   // console.log(req.files.file);
+  sdc.increment("filepost.counter");
   const billid = req.params.id;
 
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -80,7 +81,7 @@ postFile = (req, res) => {
 
 deleteFile = (req, res) => {
   const billid = req.params.id;
-
+  sdc.increment("delfile.counter");
   // console.log(fileid)
   connection.query(
     "SELECT * FROM filedata_table WHERE bill_id = ?",
@@ -114,6 +115,7 @@ deleteFile = (req, res) => {
 };
 
 getFile = (req, res) => {
+  sdc.increment("getfile.counter");
   const fileid = req.params.fileid;
   connection.query(
     "SELECT * FROM filedata_table WHERE file_id = ?",
