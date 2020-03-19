@@ -3,6 +3,11 @@ const connection = require("../../config");
 var auth = require("basic-auth");
 const uuidv4 = require("uuid/v4");
 const fileServices = require("./fileServices");
+const SDC = require("statsd-client"),
+  sdc = new SDC({
+    port: "8125",
+    host: "localhost"
+  });
 
 checkEnum = ps => {
   if (

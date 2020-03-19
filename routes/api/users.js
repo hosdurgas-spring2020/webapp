@@ -51,8 +51,8 @@ validateEmail = user => {
 // @desc    Register new user
 // @access  Public
 router.post("/user/", (req, res) => {
-  sdc.increment("some.counter");
-  sdc.increment("api.conter");
+  sdc.increment("postuser.counter");
+
   // console.log(some.counter);
 
   const { first_name, last_name, email_address, password } = req.body;
