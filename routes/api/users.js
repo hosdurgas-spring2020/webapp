@@ -75,11 +75,13 @@ router.post("/user/", (req, res) => {
     [email_address],
     (err, row) => {
       if (err) {
+        sdc.timing("putreq.timer", timer);
         return res.status(500).json({ msg: "Database Error" });
       }
 
       //Validate passwords
       if (!validatePass(password)) {
+        sdc.timing("putreq.timer", timer);
         return res.status(400).json({
           msg:
             "Password should minimus of 8 characters and be a combination of uppercase, lowercase, and digits"
