@@ -10,7 +10,8 @@ const authenticate = require("./auth");
 const { getreq, putreq } = require("./userServices");
 const SDC = require("statsd-client"),
   sdc = new SDC({
-    port: "8125"
+    port: "8125",
+    host: "localhost"
   });
 
 // var StatsD = require("node-dogstatsd").StatsD;
@@ -50,7 +51,9 @@ validateEmail = user => {
 // @desc    Register new user
 // @access  Public
 router.post("/user/", (req, res) => {
-  sdc.increment("some.counter");
+  let timer = new Date();
+  sdc.increment("postuser.counter");
+
   // console.log(some.counter);
 
   const { first_name, last_name, email_address, password } = req.body;
@@ -59,10 +62,12 @@ router.post("/user/", (req, res) => {
 
   // Simple validationr
   if (!first_name || !last_name || !email_address || !password) {
+    sdc.timing("putreq.timer", timer);
     return res.status(400).json({ msg: "Please enter all fields" });
   }
   //Validate Email
   if (!validator.validate(email_address)) {
+    sdc.timing("putreq.timer", timer);
     return res.status(400).json({ msg: "Enter correct email address" });
   }
 
@@ -72,11 +77,13 @@ router.post("/user/", (req, res) => {
     [email_address],
     (err, row) => {
       if (err) {
+        sdc.timing("putreq.timer", timer);
         return res.status(500).json({ msg: "Database Error" });
       }
 
       //Validate passwords
       if (!validatePass(password)) {
+        sdc.timing("putreq.timer", timer);
         return res.status(400).json({
           msg:
             "Password should minimus of 8 characters and be a combination of uppercase, lowercase, and digits"
@@ -102,7 +109,7 @@ router.post("/user/", (req, res) => {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) throw err;
             newUser.password = hash;
-
+            let dbTimer = new Date();
             var id = uuidv4(); //Generating uuid
             connection.query(
               `insert into finaltable(id,first_name, last_name, email_address, password, account_created, account_updated) 
@@ -118,6 +125,7 @@ router.post("/user/", (req, res) => {
                 date
               ],
               (error, results, fields) => {
+                sdc.timing("postsuserdb.timer", dbTimer);
                 if (error) {
                   console.log(error);
                   res.status(500).json({
@@ -125,7 +133,7 @@ router.post("/user/", (req, res) => {
                   });
                 } else {
                   const { password, ...data } = req.body;
-
+                  sdc.timing("putreq.timer", timer);
                   return res.status(201).json({
                     ...data,
                     account_created: date,

@@ -4,10 +4,17 @@ var auth = require("basic-auth");
 const uuidv4 = require("uuid/v4");
 const s3File = require("../../controller/s3Controller");
 var fs = require("fs");
+const SDC = require("statsd-client"),
+  sdc = new SDC({
+    port: "8125",
+    host: "localhost"
+  });
 
 // console.log("hello")
 postFile = (req, res) => {
   // console.log(req.files.file);
+  let timer = new Date();
+  sdc.increment("filepost.counter");
   const billid = req.params.id;
 
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -49,6 +56,7 @@ postFile = (req, res) => {
       queryStr,
       [billid, fileid, file_name + "." + extension, uploadPath, md5, size],
       (err, row) => {
+        sdc.timing("db.timer", timer);
         if (err) {
           console.log(err);
           if (err.code == "ER_DUP_ENTRY")
@@ -70,6 +78,7 @@ postFile = (req, res) => {
               url: uploadPath,
               uploaded_on: new Date().toISOString().slice(0, 10)
             };
+            sdc.timing("filePost.timer", timer);
             return res.status(201).json(pl);
           }
         );
@@ -79,8 +88,9 @@ postFile = (req, res) => {
 };
 
 deleteFile = (req, res) => {
+  let timer = new Date();
   const billid = req.params.id;
-
+  sdc.increment("delfile.counter");
   // console.log(fileid)
   connection.query(
     "SELECT * FROM filedata_table WHERE bill_id = ?",
@@ -95,6 +105,7 @@ deleteFile = (req, res) => {
         `DELETE FROM filedata_table WHERE (file_id = ?)`,
         fileid,
         (err, row) => {
+          sdc.timing("db.timer", timer);
           if (err) return res.status(500).json({ msg: "Database Error" });
           if (row.affectedRows == 0)
             return res.status(400).json({ msg: "Bill Doesn't Exist" });
@@ -105,7 +116,7 @@ deleteFile = (req, res) => {
           } catch (err) {
             console.log(err);
           }
-
+          sdc.timing("delete.timer", timer);
           return res.status(204).json();
         }
       );
@@ -114,15 +125,19 @@ deleteFile = (req, res) => {
 };
 
 getFile = (req, res) => {
+  sdc.increment("getfile.counter");
+  let timer = new Date();
   const fileid = req.params.fileid;
   connection.query(
     "SELECT * FROM filedata_table WHERE file_id = ?",
     [fileid],
     (err, row) => {
+      sdc.timing("db.timer", timer);
       if (err) return res.status(500).json({ msg: "Database Error" });
       if (row.length == 0 || row == undefined)
         return res.status(401).json({ msg: "No such Files" });
       let { bill_id, md5, size, ...pl } = row[0];
+      sdc.timing("getFile.timer", timer);
       return res.status(201).json(pl);
     }
   );

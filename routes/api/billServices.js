@@ -3,6 +3,11 @@ const connection = require("../../config");
 var auth = require("basic-auth");
 const uuidv4 = require("uuid/v4");
 const fileServices = require("./fileServices");
+const SDC = require("statsd-client"),
+  sdc = new SDC({
+    port: "8125",
+    host: "localhost"
+  });
 
 checkEnum = ps => {
   if (
@@ -16,6 +21,8 @@ checkEnum = ps => {
 };
 
 createBill = (req, res) => {
+  sdc.increment("postbill.counter");
+  let timer = new Date();
   const email_address = res.locals.user;
   const {
     vendor,
@@ -66,6 +73,7 @@ createBill = (req, res) => {
       paymentStatus
     ],
     (err, row) => {
+      sdc.timing("db.timer", timer);
       if (err) {
         console.error(err);
         return res.status(500).json({ msg: "Database Error" });
@@ -79,6 +87,7 @@ createBill = (req, res) => {
             console.error(err);
             return res.status(500).json({ msg: "Database Error" });
           }
+          sdc.timing("db.timer", timer);
           return res.status(200).json(row);
         }
       );
@@ -87,6 +96,7 @@ createBill = (req, res) => {
 };
 
 getAllBills = (req, res) => {
+  sdc.increment("getbill.counter");
   console.log(res.locals);
   connection.query(
     `SELECT * FROM
@@ -132,6 +142,7 @@ getAllBills = (req, res) => {
 };
 
 updateBill = (req, res) => {
+  sdc.increment("putbill.counter");
   const billid = req.params.id;
   const {
     vendor,
@@ -198,6 +209,8 @@ updateBill = (req, res) => {
 };
 
 deleteBill = (req, res) => {
+  let timer = new Date();
+  sdc.increment("delbill.counter");
   const billid = req.params.id;
   connection.query(
     `DELETE FROM bill_table WHERE (id = ?)`,
@@ -207,24 +220,32 @@ deleteBill = (req, res) => {
       if (row.affectedRows == 0)
         return res.status(400).json({ msg: "Bill Doesn't Exist" });
       // console.log(row);
+      sdc.timing("db.timer", timer);
 
       if (res.locals.attachments != null) {
         fileServices.deleteFile(req, res);
       }
 
       // console.log(row)
-      else return res.status(204).json();
+      else {
+        sdc.timing("deletebill.timer", timer);
+        return res.status(204).json();
+        // sdc.timing("deletebill.timer", timer);
+      }
     }
   );
 };
 
 getBill = (req, res) => {
+  let timer = new Date();
+  sdc.increment("getbill.counter");
   const billid = req.params.id;
   console.log(billid);
   connection.query(
     "SELECT * FROM bill_table WHERE id = ?",
     [billid],
     (err, row) => {
+      sdc.timing("db.timer", timer);
       if (err) return res.status(500).json({ msg: "Database Error1" });
       if (row.length == 0) return res.status(401).json({ msg: "No such bill" });
       if (row[0].attachments != null) {
@@ -232,6 +253,7 @@ getBill = (req, res) => {
           res.status(200).json(pl);
         });
       } else {
+        sdc.timing("getbill.timer", timer);
         return res.status(200).json(row[0]);
       }
     }
