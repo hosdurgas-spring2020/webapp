@@ -51,6 +51,7 @@ validateEmail = user => {
 // @desc    Register new user
 // @access  Public
 router.post("/user/", (req, res) => {
+  let timer = new Date();
   sdc.increment("postuser.counter");
 
   // console.log(some.counter);
@@ -127,7 +128,7 @@ router.post("/user/", (req, res) => {
                   });
                 } else {
                   const { password, ...data } = req.body;
-
+                  sdc.timing("putreq.timer", timer);
                   return res.status(201).json({
                     ...data,
                     account_created: date,
