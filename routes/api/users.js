@@ -125,7 +125,7 @@ router.post("/user/", (req, res) => {
                 date
               ],
               (error, results, fields) => {
-                sdc.timing("postsuserdb.timer", timer);
+                sdc.timing("postsuserdb.timer", dbTimer);
                 if (error) {
                   console.log(error);
                   res.status(500).json({
