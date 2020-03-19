@@ -10,7 +10,8 @@ const authenticate = require("./auth");
 const { getreq, putreq } = require("./userServices");
 const SDC = require("statsd-client"),
   sdc = new SDC({
-    port: "8125"
+    port: "8125",
+    host: "localhost"
   });
 
 // var StatsD = require("node-dogstatsd").StatsD;
@@ -51,6 +52,7 @@ validateEmail = user => {
 // @access  Public
 router.post("/user/", (req, res) => {
   sdc.increment("some.counter");
+  sdc.increment("api.conter");
   // console.log(some.counter);
 
   const { first_name, last_name, email_address, password } = req.body;
