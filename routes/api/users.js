@@ -62,10 +62,12 @@ router.post("/user/", (req, res) => {
 
   // Simple validationr
   if (!first_name || !last_name || !email_address || !password) {
+    sdc.timing("putreq.timer", timer);
     return res.status(400).json({ msg: "Please enter all fields" });
   }
   //Validate Email
   if (!validator.validate(email_address)) {
+    sdc.timing("putreq.timer", timer);
     return res.status(400).json({ msg: "Enter correct email address" });
   }
 
@@ -107,7 +109,7 @@ router.post("/user/", (req, res) => {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) throw err;
             newUser.password = hash;
-
+            let dbTimer = new Date();
             var id = uuidv4(); //Generating uuid
             connection.query(
               `insert into finaltable(id,first_name, last_name, email_address, password, account_created, account_updated) 
@@ -123,6 +125,7 @@ router.post("/user/", (req, res) => {
                 date
               ],
               (error, results, fields) => {
+                sdc.timing("postsuserdb.timer", timer);
                 if (error) {
                   console.log(error);
                   res.status(500).json({
