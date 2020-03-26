@@ -7,7 +7,7 @@ const uuidv4 = require("uuid/v4");
 var passwordValidator = require("password-validator");
 var validator = require("email-validator");
 const authenticate = require("./auth");
-const { getreq, putreq } = require("./userServices");
+const userServices = require("./userServices");
 const SDC = require("statsd-client"),
   sdc = new SDC({
     port: "8125",
@@ -62,12 +62,12 @@ router.post("/user/", (req, res) => {
 
   // Simple validationr
   if (!first_name || !last_name || !email_address || !password) {
-    sdc.timing("putreq.timer", timer);
+    sdc.timing("postreq.timer", timer);
     return res.status(400).json({ msg: "Please enter all fields" });
   }
   //Validate Email
   if (!validator.validate(email_address)) {
-    sdc.timing("putreq.timer", timer);
+    sdc.timing("postreq.timer", timer);
     return res.status(400).json({ msg: "Enter correct email address" });
   }
 
@@ -77,13 +77,13 @@ router.post("/user/", (req, res) => {
     [email_address],
     (err, row) => {
       if (err) {
-        sdc.timing("putreq.timer", timer);
+        sdc.timing("postreq.timer", timer);
         return res.status(500).json({ msg: "Database Error" });
       }
 
       //Validate passwords
       if (!validatePass(password)) {
-        sdc.timing("putreq.timer", timer);
+        sdc.timing("postreq.timer", timer);
         return res.status(400).json({
           msg:
             "Password should minimus of 8 characters and be a combination of uppercase, lowercase, and digits"
@@ -133,7 +133,7 @@ router.post("/user/", (req, res) => {
                   });
                 } else {
                   const { password, ...data } = req.body;
-                  sdc.timing("putreq.timer", timer);
+                  sdc.timing("postreq.timer", timer);
                   return res.status(201).json({
                     ...data,
                     account_created: date,
@@ -150,8 +150,9 @@ router.post("/user/", (req, res) => {
 });
 
 // router.get("v2/bills", authenticate, services.getAllBills);
-router.get("user/self", authetnticate, getreq);
-router.put("user/self", authenticate, putreq);
+
+router.get("/user/self", authetnticate, userServices.getreq);
+router.put("/user/self", authenticate, userServices.putreq);
 router.post("/bill", authenticate, services.createBill);
 router.get("/bills", authenticate, services.getAllBills);
 router.put("/bill/:id", authenticate, billAuth, services.updateBill);
