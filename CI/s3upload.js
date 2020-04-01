@@ -9,7 +9,9 @@ const s3 = new AWS.S3({
 upload = filePath => {
   const file = fs.readFileSync(filePath);
   const params = {
-    Bucket: process.env.CDS3BUCKET,
+    Bucket:
+      process.env.CDS3BUCKET ||
+      "csye6225-assignment9-trial1-s3bucket-17vlj60r0lmkj",
     Key: "artifacts.zip", // File name you want to save as in S3
     Body: file
   };

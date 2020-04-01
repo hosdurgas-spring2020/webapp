@@ -1,12 +1,14 @@
 var mysql = require("mysql");
 require("dotenv").config({ path: "/env/properties/userdata.env" });
+require("dotenv").config();
 var connection = mysql.createConnection({
   host: process.env.HOST,
-  user: process.env.USERNAME,
+  user: process.env.USERNAME1,
   password: process.env.PASSWORD, //|| null,
-  database: "csye"
+  database: "test"
 });
 connection.connect(err => {
+  console.log(process.env.USERNAME1);
   if (!err) {
     console.log("Database is  connected");
     let q = `CREATE TABLE IF NOT EXISTS bill_table (
