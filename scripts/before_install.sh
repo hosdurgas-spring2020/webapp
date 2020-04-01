@@ -9,6 +9,7 @@
 # Install forever module 
 # https://www.npmjs.com/package/forever
 ls
+sleep 120
 sudo rm -rf /webapp
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a stop
 
